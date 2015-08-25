@@ -207,7 +207,7 @@ gulp.task('start:client', cb => {
 gulp.task('start:server', () => {
     process.env.NODE_ENV = process.env.NODE_ENV || 'development';
     config = require('./server/config/environment');
-    nodemon('-w lib server/app.js')
+    nodemon('-w server server')
         .on('log', onServerLog);
 });
 
