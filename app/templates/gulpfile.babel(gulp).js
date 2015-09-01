@@ -16,10 +16,6 @@ import nib from 'nib';<% } %>
 var plugins = gulpLoadPlugins();
 var config;
 
-var yeoman = {
-    app: require('./bower.json').appPath || 'client/app'
-};
-
 const paths = {
     client: {
         assets: 'client/assets/**/*',
