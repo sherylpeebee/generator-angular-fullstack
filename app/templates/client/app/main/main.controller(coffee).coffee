@@ -1,22 +1,28 @@
 'use strict'
 
-angular.module '<%= scriptAppName %>'
-.controller 'MainCtrl', ($scope, $http<% if (filters.socketio) { %>, socket<% } %>) ->
-  $scope.awesomeThings = []
-
+MainController = ($scope, $http<% if (filters.socketio) { %>, socket<% } %>) ->
+  self = this
+  @awesomeThings = []
   $http.get('/api/things').then (response) ->
-    $scope.awesomeThings = response.data
-    <% if (filters.socketio) { %>socket.syncUpdates 'thing', $scope.awesomeThings<% } %>
+    self.awesomeThings = response.data<% if (filters.socketio) { %>
+    socket.syncUpdates 'thing', self.awesomeThings<% } %>
+    return
 <% if (filters.models) { %>
-  $scope.addThing = ->
-    return if $scope.newThing is ''
-    $http.post '/api/things',
-      name: $scope.newThing
+  @addThing = ->
+    if self.newThing == ''
+      return
+    $http.post '/api/things', name: self.newThing
+    self.newThing = ''
+    return
 
-    $scope.newThing = ''
-
-  $scope.deleteThing = (thing) ->
-    $http.delete '/api/things/' + thing._id<% } %><% if (filters.socketio) { %>
+  @deleteThing = (thing) ->
+    $http.delete '/api/things/' + thing._id
+    return<% } %><% if (filters.socketio) { %>
 
   $scope.$on '$destroy', ->
-    socket.unsyncUpdates 'thing'<% } %>
+    socket.unsyncUpdates 'thing'
+    return
+  return<% } %>
+
+angular.module '<%= scriptAppName %>'
+.controller 'MainController', MainController
